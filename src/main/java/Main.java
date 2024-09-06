@@ -1,9 +1,8 @@
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class Main {
-
+	@SuppressWarnings("resource")
 	public static void main(String[] args) {
-		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(SpringConfig.class);
-
+		new AnnotationConfigApplicationContext(SpringConfig.class);
 	}
 }

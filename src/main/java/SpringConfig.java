@@ -3,20 +3,20 @@ import java.beans.PropertyChangeListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import businessDomain.CalculationManager;
-import businessDomain.CoulombIntegralCalculator;
-import businessDomain.DataFromFileSuplier;
-import businessDomain.SpinDensitySuplier;
-import businessDomain.SpinDensityTaskBeanFactory;
-import businessDomain.ShennonEntropyCalculator;
-import modelClasses.ButtonPanelModel;
-import modelClasses.CalculatorComboBoxModel;
-import modelClasses.FilesTableModel;
-import modelClasses.ThresholdTextFieldListener;
-import viewClasses.ButtonPanel;
-import viewClasses.FilesTable;
-import viewClasses.MainWindow;
-import viewClasses.SettingsPanel;
+import models.ButtonPanelModel;
+import models.CalculatorComboBoxModel;
+import models.FilesTableModel;
+import models.SpinDensityTaskBeanFactory;
+import models.ThresholdTextFieldListener;
+import utils.CalculationManager;
+import utils.CoulombIntegralCalculator;
+import utils.DataFromFileSuplier;
+import utils.ShennonEntropyCalculator;
+import utils.SpinDensitySuplier;
+import views.ButtonPanel;
+import views.FilesTable;
+import views.MainWindow;
+import views.SettingsPanel;
 
 @Configuration
 public class SpringConfig {
