@@ -7,23 +7,50 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import org.springframework.stereotype.Component;
 
 import ru.sentyurin.SpinDensityPropertiesCalculator.models.SquareGridData;
 
+/**
+ * Объекты этого класса получают данные спиновой плотности из файлов. На данный
+ * момент реализована возможность получать данные из .txt файлов.
+ */
 @Component
 public class SpinDensitySuplier implements DataFromFileSuplier {
-	/**
-	 * Объекты этого класса получают данные спиновой плотности из файлов.
-	 * На данный момент реализована возможность получать данные из .txt файлов.
-	 */
 	private final List<String> possibleExtentions = new ArrayList<String>();
 	{
 		possibleExtentions.add("txt");
 	}
-	
+
+	/**
+	 * Функция импортирует данные из файла. Возвращает спиновую плотность в виде
+	 * объекта SquareGridData.
+	 */
+	public SquareGridData getSquareGridDataFromFile(String filePath) throws IOException {
+		if (filePath.endsWith(".txt")) {
+			List<double[]> rawData = getDataFromTXTFile(filePath);
+			double diffVolume = getDiffVolume(rawData);
+			return new SquareGridData(rawData, diffVolume);
+		}
+		return null;
+	}
+
+	/**
+	 * По расширению файла функция определяет можно ли из него импортировать
+	 * спиновую плотность.
+	 */
+	public boolean applicableFile(File file) {
+		String filePath = file.getPath();
+		for (String fileExtention : possibleExtentions) {
+			if (filePath.endsWith(fileExtention))
+				return true;
+		}
+		return false;
+	}
+
 	private double getDiffVolume(List<double[]> rawData) {
 		int pointsCount = rawData.size();
 		double[] firstPoint = rawData.get(0);
@@ -57,45 +84,17 @@ public class SpinDensitySuplier implements DataFromFileSuplier {
 	}
 
 	private List<double[]> getDataFromTXTFile(String filePath) throws IOException {
-		List<double[]> rawData = new ArrayList<double[]>();
+		Pattern pattern = Pattern.compile("\\s+"); // treats multiple spaces as a single delimiter
+		List<double[]> data = new ArrayList<>();
 		try (BufferedReader input = new BufferedReader(new FileReader(filePath))) {
-			while (true) {
-				String line = input.readLine();
-				if (line == null)
-					break;
-				double[] lineDataDoubles = Stream.of(line.split(" ")).filter(x -> !x.isBlank())
-						.mapToDouble(Double::parseDouble).toArray();
-				rawData.add(lineDataDoubles);
+			while (input.ready()) {
+				String line = input.readLine().trim();
+				data.add(pattern.splitAsStream(line).mapToDouble(Double::parseDouble).toArray());
 			}
 		} catch (FileNotFoundException e) {
-			System.out.print("No such file!");
+			System.out.println("No such file!");
 		}
-		System.out.println("");
-		return rawData;
+		return data;
 	}
-	
-	public SquareGridData getSquareGridDataFromFile(String filePath) throws IOException {
-		/**
-		 * Функция импортирует данные из файла.
-		 * Возвращает спиновую плотность в виде объекта SquareGridData.
-		 */
-		if(filePath.endsWith(".txt")) {
-			List<double[]> rawData = getDataFromTXTFile(filePath);
-			double diffVolume = getDiffVolume(rawData);
-			return new SquareGridData(rawData, diffVolume);
-		}
-		return null;
-	}
-	
-	/**
-	 * По расширению файла функция определяет можно ли из него импортировать спиновую плотность.
-	 */
-	public boolean applicableFile(File file) {
-		String filePath = file.getPath();
-		for (String fileExtention : possibleExtentions) {
-			if (filePath.endsWith(fileExtention))
-				return true;
-		}
-		return false;
-	}
+
 }

@@ -3,13 +3,22 @@ package ru.sentyurin.SpinDensityPropertiesCalculator.models;
 import java.util.List;
 
 /**
- * Изменяемый объект, который содержит в себе: 1) поле data — список из массивов
- * double[] координат (x, y, z) и значения в этой точке 2) Объем dxdydz (то есть
- * произведение шагов сетки по трём осям) в поле diffVolume
+ * Изменяемый объект, который содержит в себе:
+ * 
+ * 1) поле data — список из массивов double[] координат (x, y, z) и значения в
+ * этой точке
+ * 
+ * 2) Объем dxdydz (то есть произведение шагов сетки по трём осям) в поле
+ * diffVolume
  */
 public class SquareGridData {
 	public List<double[]> data;
 	public final double diffVolume;
+
+	public SquareGridData(List<double[]> data, double diffVolume) {
+		this.data = data;
+		this.diffVolume = diffVolume;
+	}
 
 	public List<double[]> getData() {
 		return data;
@@ -19,13 +28,8 @@ public class SquareGridData {
 		return diffVolume;
 	}
 
-	public SquareGridData(List<double[]> data, double diffVolume) {
-		this.data = data;
-		this.diffVolume = diffVolume;
-	}
-
 	/**
-	 * Все значения становятся положительными. Новые значения нормализуется на
+	 * Все значения становятся положительными. Новые значения нормируются на
 	 * единицу.
 	 */
 	public SquareGridData absAndNormalize() {

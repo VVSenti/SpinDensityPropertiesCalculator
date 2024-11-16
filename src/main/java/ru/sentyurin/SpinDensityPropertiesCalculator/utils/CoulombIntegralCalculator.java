@@ -4,12 +4,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.DoubleAdder;
 
 import org.springframework.stereotype.Component;
 
@@ -70,7 +68,7 @@ public class CoulombIntegralCalculator implements CalculatorInterruptable {
 				e.printStackTrace();
 			}
 		}
-
+		executor.shutdown();
 		return integral * diffVolume * diffVolume * 627.5095 * 2.0 / 1.8897259886;
 	}
 
